@@ -97,7 +97,10 @@
     std::vector<unsigned long long> pids;                                                             \
     do                                                                                                \
     {                                                                                                 \
-        std::string cmd = "pgrep -f \"" + ESCAPE_STRING(SESSION_PREFIX + configId) + "\"";            \
+        std::string cmd = "pgrep -f \"";                                                              \
+        auto id = SESSION_PREFIX + configId;                                                          \
+        id = std::string() + "[" + id[0] + "]" + id.substr(1);                                        \
+        cmd += ESCAPE_STRING(id) + "\"";                                                              \
         FILE *fp = popen(cmd.c_str(), "r");                                                           \
         if (fp == nullptr)                                                                            \
         {                                                                                             \
@@ -253,17 +256,24 @@ struct Status : Command
         const std::string &configId = args[0];
         if (!hasConfig(configId))
         {
-            std::cout << Color::Cyan << "Config " << configId << " does " << Color::Red << "not exist." << Style::Reset << std::endl;
+            std::cout << Color::Cyan << "Config " << configId << " does " << Color::Red << Style::Bold << "[not exist]" << Style::Reset << Color::Cyan << "." << Style::Reset << std::endl;
             return;
         }
-        Config config = load(configId);
-        if (config.isRunning())
+        if (Config::isRunning(configId))
         {
-            std::cout << Color::Cyan << "Config " << configId << " is " << Color::Green << "running." << Style::Reset << std::endl;
+            std::cout
+                << Color::Cyan << "Config " << configId << " is "
+                << Color::Green << Style::Bold << "[running]"
+                << Style::Reset << Color::Cyan << "."
+                << Style::Reset << std::endl;
         }
         else
         {
-            std::cout << Color::Cyan << "Config " << configId << " is " << Color::Yellow << "available." << Style::Reset << std::endl;
+            std::cout
+                << Color::Cyan << "Config " << configId << " is "
+                << Color::Yellow << Style::Bold << "[stopped]"
+                << Style::Reset << Color::Cyan << "."
+                << Style::Reset << std::endl;
         }
     }
 
