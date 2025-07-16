@@ -43,11 +43,26 @@ struct Create : Command
             else if (args[i] == "--working" && i + 1 < args.size()) workingDirectory = args[++i];
             else commandArgs.push_back(args[i]);
         }
+        auto jarFile = std::filesystem::path(jarPath);
+        if (!std::filesystem::exists(jarFile) || !std::filesystem::is_regular_file(jarFile) || jarFile.extension() != ".jar")
+        {
+            std::cout << Color::Red << "Invalid JAR file path: " << jarPath << Style::Reset << std::endl;
+            return;
+        }
+        if (!workingDirectory.empty())
+        {
+            auto workingDirPath = std::filesystem::path(workingDirectory);
+            if (!std::filesystem::exists(workingDirPath) || !std::filesystem::is_directory(workingDirPath))
+            {
+                std::cout << Color::Red << "Invalid working directory: " << workingDirectory << Style::Reset << std::endl;
+                return;
+            }
+        }
         Config config;
-        config.jarPath = jarPath;
+        config.jarPath = std::filesystem::absolute(jarFile).string();
         config.args = commandArgs;
         config.mainClassName = mainClassName;
-        config.workingDirectory = workingDirectory;
+        config.workingDirectory = workingDirectory.empty() ? "" : std::filesystem::absolute(workingDirectory).string();
         save(config, name);
         std::cout << Color::Green << "Created config for " << name << Style::Reset << std::endl;
     }
