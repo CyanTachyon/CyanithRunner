@@ -25,7 +25,12 @@ struct List : Command
         std::cout << Color::Green << "Configs found:" << Style::Reset << std::endl;
         for (const auto &id : configIds)
         {
-            std::cout << " - " << id << std::endl;
+            std::cout << " - " << id << " ";
+            if (Config::isRunning(id))
+                std::cout << Color::Green << Style::Bold << "[running]" << Style::Reset;
+            else
+                std::cout << Color::Red << Style::Bold << "[stopped]" << Style::Reset;
+            std::cout << std::endl;
         }
     }
 

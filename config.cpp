@@ -19,6 +19,11 @@ struct Config
 
     bool isRunning()
     {
+        return isRunning(id);
+    }
+
+    static bool isRunning(const std::string &id)
+    {
         std::string command = "screen -S ";
         command += SESSION_PREFIX + id + " -Q select > /dev/null";
         return system(command.c_str()) == 0;
