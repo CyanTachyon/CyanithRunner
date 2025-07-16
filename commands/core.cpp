@@ -61,7 +61,7 @@
             tCmd += " -jar \"" + ESCAPE_STRING(config.jarPath) + "\"";                                                     \
         for (const auto &arg : config.args)                                                                                \
             tCmd += " \"" + ESCAPE_STRING(arg) + "\"";                                                                     \
-        tCmd += " \"-__CYANITH_RUNNER_ID=" + ESCAPE_STRING(SESSION_PREFIX + configId) + "\"";                                 \
+        tCmd += " \"-__CYANITH_RUNNER_ID=" + ESCAPE_STRING(SESSION_PREFIX + configId) + "\"";                              \
         tCmd += "; exit";                                                                                                  \
         command += ESCAPE_STRING(tCmd);                                                                                    \
         command += "\"";                                                                                                   \
@@ -115,7 +115,7 @@
 #define check_stop(configId)                                                                                                         \
     do                                                                                                                               \
     {                                                                                                                                \
-        for (int i = 0; i < 5; i++)                                                                                                  \
+        for (int i = 0; i < 10; i++)                                                                                                 \
         {                                                                                                                            \
             std::string command = "screen -S \"" + ESCAPE_STRING(SESSION_PREFIX + configId) + "\" -X stuff '\003' > /dev/null 2>&1"; \
             system(command.c_str());                                                                                                 \
